@@ -17,6 +17,7 @@ namespace BarberShop.Database.EntityTypeConfigurations
             builder.HasOne(s => s.Reservation)
                    .WithMany(r => r.Services)
                    .HasForeignKey(s => s.ReservationId)
+                   .OnDelete(DeleteBehavior.Restrict)
                    .IsRequired();
         }
     }

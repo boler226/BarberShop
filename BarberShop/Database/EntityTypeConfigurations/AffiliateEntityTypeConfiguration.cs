@@ -15,13 +15,14 @@ namespace BarberShop.Database.EntityTypeConfigurations
                     .IsRequired();
 
             builder.HasOne(a => a.City)
-                    .WithMany(c => c.Affiliates)
+                    .WithMany()
                     .HasForeignKey(ac => ac.CityId)
                     .IsRequired();
 
             builder.HasMany(a => a.Barbershops)
                     .WithOne(ab => ab.Affiliate)
                     .HasForeignKey(ab => ab.AffiliateId)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
         }
     }

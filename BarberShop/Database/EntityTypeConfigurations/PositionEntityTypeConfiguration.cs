@@ -13,11 +13,6 @@ namespace BarberShop.Database.EntityTypeConfigurations
             builder.Property(p => p.Name)
                  .HasMaxLength(255)
                  .IsRequired();
-
-            builder.HasOne(p => p.Employee)
-                   .WithOne(e => e.Position)
-                   .HasForeignKey<Position>(p => p.EmployeeId)
-                   .IsRequired();
         }
     }
 }

@@ -26,6 +26,7 @@ namespace BarberShop.Database.EntityTypeConfigurations
             builder.HasOne(b => b.Affiliate)
                     .WithMany(a => a.Barbershops)
                     .HasForeignKey(ba => ba.AffiliateId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
         }
     }

@@ -18,11 +18,13 @@ namespace BarberShop.Database.EntityTypeConfigurations
             builder.HasOne(r => r.Employee)
                    .WithMany(e => e.Reservations)
                    .HasForeignKey(r => r.EmployeeId)
+                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasOne(r => r.User)
                    .WithMany(u => u.Reservations)
                    .HasForeignKey(r => r.UserId)
+                   .OnDelete(DeleteBehavior.Restrict)
                    .IsRequired();
         }
     }

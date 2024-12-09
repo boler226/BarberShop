@@ -27,16 +27,7 @@ namespace BarberShop.Database.EntityTypeConfigurations
             builder.HasOne(c => c.Country)
                     .WithMany(c => c.Cities)
                     .HasForeignKey(c => c.CountryId)
-                    .IsRequired();
-
-            builder.HasMany(c => c.Addresses)
-                    .WithOne(a => a.City)
-                    .HasForeignKey(a => a.CityId)
-                    .IsRequired();
-
-            builder.HasMany(c => c.Affiliates)
-                    .WithOne(a => a.City)
-                    .HasForeignKey(a => a.CityId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
         }
     }
