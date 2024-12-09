@@ -18,7 +18,5 @@ namespace BarberShop.Database.Entities
         public long CountryId { get; set; }
         public Country Country { get; set; } = null!;
         public ICollection<Address> Addresses { get; set; } = new List<Address>();
-        public ICollection<Affiliate> Affiliates { get; set; } = new List<Affiliate>();
-
     }
 }

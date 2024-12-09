@@ -1,4 +1,25 @@
+using BarberShop.Database.Context;
+using BarberShop.Services;
+using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var assemblyName = AssemblyService.GetAssemblyName();
+
+
+builder.Services.AddDbContext<DataContext>(
+    options => {
+        options.UseNpgsql(
+            builder.Configuration.GetConnectionString("PostgreSQLConnection"),
+            npgsqlOptions => npgsqlOptions.MigrationsAssembly(assemblyName)
+        );
+
+        if (builder.Environment.IsDevelopment()) {  
+            options.EnableSensitiveDataLogging(); // Логування чутливих даних
+        }
+    }
+);
 
 // Add services to the container.
 
