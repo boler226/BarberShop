@@ -12,7 +12,7 @@ namespace BarberShop.Database.Context
     : IdentityDbContext<User, Role, long, IdentityUserClaim<long>, UserRole, IdentityUserLogin<long>,
             IdentityRoleClaim<long>, IdentityUserToken<long>>(options) {
 
-        public DbSet<Address> Adresses { get; set; }
+        public DbSet<Address> Addresses { get; set; }
         public DbSet<Affiliate> Affiliates { get; set; }
         public DbSet<Barbershop> Barbershops { get; set; }
         public DbSet<City> Cities { get; set; }
