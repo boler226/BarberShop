@@ -36,6 +36,7 @@ builder.Services.AddAutoMapper(typeof(AppMapProfile));
 builder.Services.AddTransient<IImageService, ImageService>();
 
 builder.Services.AddTransient<ICountriesControllerService, CountriesControllerService>();
+builder.Services.AddTransient<ICitiesControllerService, CitiesControllerService>();
 
 
 var app = builder.Build();
