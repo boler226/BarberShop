@@ -14,8 +14,7 @@ namespace BarberShop.Services.ControllerServices
         IImageService imageService
         ) : ICountriesControllerService {
 
-        public async Task CreateAsync(CreateCountryVm vm)
-        {
+        public async Task CreateAsync(CreateCountryVm vm) {
             var country = mapper.Map<Country>(vm);
             country.Image = await imageService.SaveImageAsync(vm.Image);
             
@@ -31,8 +30,7 @@ namespace BarberShop.Services.ControllerServices
                 throw;
             }
         }
-        public async Task UpdateAsync(UpdateCountryVm vm)
-        {
+        public async Task UpdateAsync(UpdateCountryVm vm) {
             Country country = await context.Countries.FirstAsync(c => c.Id == vm.Id);
 
             string oldImage = country.Image;
@@ -52,8 +50,7 @@ namespace BarberShop.Services.ControllerServices
                 throw;
             }
         }
-        public async Task DeleteIfExistsAsync(long id)
-        {
+        public async Task DeleteIfExistsAsync(long id) {
             var country = await context.Countries.FirstOrDefaultAsync(c => c.Id == id);
 
             if (country is null)
@@ -61,17 +58,9 @@ namespace BarberShop.Services.ControllerServices
 
             context.Countries.Remove(country);
 
-            try
-            {
-                await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
-                imageService.DeleteImageIfExists(country.Image);
-            }
-            catch (Exception)
-            {
-                imageService.DeleteImageIfExists(country.Image);
-                throw;
-            }
+            imageService.DeleteImageIfExists(country.Image);
         }
     }
 }
