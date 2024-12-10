@@ -5,7 +5,6 @@ namespace BarberShop.ViewModels.Country
     public class CreateCountryVm
     {
         public string Name { get; set; } = null!;
-        public string Image { get; set; } = null!;
-        public ICollection<CityVm> Cities { get; set; } = null!;
+        public IFormFile Image { get; set; } = null!;
     }
 }
