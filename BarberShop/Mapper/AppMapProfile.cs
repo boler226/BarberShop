@@ -3,6 +3,7 @@
 using BarberShop.ViewModels.Country;
 using BarberShop.ViewModels.City;
 using BarberShop.Database.Entities;
+using BarberShop.ViewModels.Address;
 
 
 namespace BarberShop.Mapper
@@ -16,6 +17,9 @@ namespace BarberShop.Mapper
             CreateMap<City, CityVm>();
             CreateMap<CreateCityVm, City>()
                     .ForMember(c => c.Image, opt => opt.Ignore());
+
+            CreateMap<Address, AddressVm>();
+            CreateMap<CreateAddressVm, Address>();
         }
     }
 }
