@@ -30,7 +30,7 @@ namespace BarberShop.Controllers
         public async Task<IActionResult> GetById(long id) {
             var city = await context.Cities
                     .ProjectTo<CityVm>(mapper.ConfigurationProvider)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(c => c.Id == id);
 
             if (city is null)
                 return NotFound();
