@@ -65,6 +65,8 @@ namespace BarberShop.Services.ControllerServices
 
             context.Cities.Remove(city);
 
+            await context.SaveChangesAsync();
+
             imageService.DeleteImageIfExists(city.Image);
         }
     }
