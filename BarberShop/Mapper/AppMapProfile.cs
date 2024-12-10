@@ -14,6 +14,8 @@ namespace BarberShop.Mapper
                     .ForMember(c => c.Image, opt => opt.Ignore());
 
             CreateMap<City, CityVm>();
+            CreateMap<CreateCityVm, City>()
+                    .ForMember(c => c.Image, opt => opt.Ignore());
         }
     }
 }
