@@ -8,6 +8,5 @@ namespace BarberShop.ViewModels.Country
         public string Name { get; set; } = null!;
         public string Image { get; set; } = null!;
         public ICollection<CityVm> Cities { get; set; } = null!;
-
     }
 }
