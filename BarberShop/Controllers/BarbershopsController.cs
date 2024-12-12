@@ -2,7 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using BarberShop.Database.Context;
 using BarberShop.Services.ControllerServices.Interfaces;
-using BarberShop.ViewModels.Affiliate;
+using BarberShop.ViewModels.Barbershop;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,48 +10,45 @@ namespace BarberShop.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class AffiliatesController(
-         DataContext context,
+    public class BarbershopsController(
+        DataContext context,
         IMapper mapper,
-        IAffiliateControllerService service
+        IBarbershopControllerService service
         ) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetAll() {
-            var affiliate = await context.Affiliates
-                    .ProjectTo<AffiliateVm>(mapper.ConfigurationProvider)
+            var barbershops = await context.Barbershops
+                    .ProjectTo<BarbershopVm>(mapper.ConfigurationProvider)
                     .ToArrayAsync();
 
-            return Ok(affiliate);
+            return Ok(barbershops);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(long id) {
-            var affiliate = await context.Affiliates
-                     .ProjectTo<AffiliateVm>(mapper.ConfigurationProvider)
-                     .FirstOrDefaultAsync(a => a.Id == id);
+            var berbershop = await context.Barbershops
+                    .ProjectTo<BarbershopVm>(mapper.ConfigurationProvider)
+                    .FirstOrDefaultAsync(b => b.Id == id);
 
-            if (affiliate is null)
-                return NotFound();
-
-            return Ok(affiliate);
+            return Ok(berbershop);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] CreateAffiliateVm vm) { 
+        public async Task<IActionResult> Create(CreateBarbershopVm vm) { 
             await service.CreateAsync(vm);
 
             return Ok(vm);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromForm] UpdateAffiliateVm vm) { 
+        public async Task<IActionResult> Update(UpdateBarbershopVm vm) { 
             await service.UpdateAsync(vm);
 
             return Ok(vm);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> Delete(long id) { 
             await service.DeleteIfExistsAsync(id);
 

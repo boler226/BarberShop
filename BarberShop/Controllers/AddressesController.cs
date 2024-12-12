@@ -52,8 +52,7 @@ namespace BarberShop.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(long id)
-        {
+        public async Task<IActionResult> Delete(long id) {
             await service.DeleteIfExistsAsync(id);
 
             return Ok();

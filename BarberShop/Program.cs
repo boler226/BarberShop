@@ -39,6 +39,7 @@ builder.Services.AddTransient<IAddressesControllerService, AddressesControllerSe
 builder.Services.AddTransient<IAffiliateControllerService, AffiliateControllerService>();
 builder.Services.AddTransient<ICountriesControllerService, CountriesControllerService>();
 builder.Services.AddTransient<ICitiesControllerService, CitiesControllerService>();
+builder.Services.AddTransient<IBarbershopControllerService, BarbershopControllerService>();
 
 
 
