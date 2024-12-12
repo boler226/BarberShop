@@ -5,6 +5,7 @@ using BarberShop.ViewModels.City;
 using BarberShop.Database.Entities;
 using BarberShop.ViewModels.Address;
 using BarberShop.ViewModels.Affiliate;
+using BarberShop.ViewModels.Barbershop;
 
 
 namespace BarberShop.Mapper
@@ -24,6 +25,9 @@ namespace BarberShop.Mapper
 
             CreateMap<Affiliate, AffiliateVm>();
             CreateMap<CreateAffiliateVm, Affiliate>();
+
+            CreateMap<Barbershop, BarbershopVm>();
+            CreateMap<CreateBarbershopVm, Barbershop>();
         }
     }
 }
