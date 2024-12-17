@@ -6,7 +6,6 @@
         public string Name { get; set; } = null!;
         public double Price { get; set; }
         public double Time { get; set; }
-        public long ReservationId { get; set; }
-        public Reservation Reservation { get; set; } = null!;
+        public ICollection<ReservationService> ReservationService { get; set; } = new List<ReservationService>();
     }
 }

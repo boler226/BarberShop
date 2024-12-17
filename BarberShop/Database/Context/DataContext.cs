@@ -21,6 +21,7 @@ namespace BarberShop.Database.Context
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<ReservationService> ReservationsService { get; set; }
         public DbSet<Service> Services { get; set; }
 
 
@@ -40,7 +41,7 @@ namespace BarberShop.Database.Context
             new PositionEntityTypeConfiguration().Configure(modelBuilder.Entity<Position>());
             new ReservationEntityTypeConfiguration().Configure(modelBuilder.Entity<Reservation>());
             new ServiceEntityTypeConfiguration().Configure(modelBuilder.Entity<Service>());
-
+            new ReseravationServiceTypeConfiguration().Configure(modelBuilder.Entity<ReservationService>());
         }
     }
 }

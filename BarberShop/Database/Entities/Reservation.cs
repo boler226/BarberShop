@@ -8,7 +8,7 @@ namespace BarberShop.Database.Entities
         public double Price { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
-        public ICollection<Service> Services { get; set; } = null!;
+        public ICollection<ReservationService> ReservationService { get; set; } = new List<ReservationService>();
         public long EmployeeId { get; set; }
         public Employee Employee { get; set; } = null!;
         public long UserId { get; set; }
