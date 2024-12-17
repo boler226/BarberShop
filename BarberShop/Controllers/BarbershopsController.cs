@@ -35,14 +35,14 @@ namespace BarberShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateBarbershopVm vm) { 
+        public async Task<IActionResult> Create([FromForm] CreateBarbershopVm vm) { 
             await service.CreateAsync(vm);
 
             return Ok(vm);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(UpdateBarbershopVm vm) { 
+        public async Task<IActionResult> Update([FromForm] UpdateBarbershopVm vm) { 
             await service.UpdateAsync(vm);
 
             return Ok(vm);
