@@ -31,7 +31,7 @@ namespace BarberShop.Services.ControllerServices
             }
         }
         public async Task UpdateAsync(UpdateCountryVm vm) {
-            Country country = await context.Countries.FirstAsync(c => c.Id == vm.Id);
+            var country = await context.Countries.FirstAsync(c => c.Id == vm.Id);
 
             string oldImage = country.Image;
 
