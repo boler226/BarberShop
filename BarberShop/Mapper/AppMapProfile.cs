@@ -6,6 +6,9 @@ using BarberShop.Database.Entities;
 using BarberShop.ViewModels.Address;
 using BarberShop.ViewModels.Affiliate;
 using BarberShop.ViewModels.Barbershop;
+using BarberShop.ViewModels.Position;
+using BarberShop.ViewModels.Reservation;
+using BarberShop.ViewModels.Service;
 
 
 namespace BarberShop.Mapper
@@ -34,6 +37,9 @@ namespace BarberShop.Mapper
 
             CreateMap<Reservation, ReservationVm>();
             CreateMap<CreateReservationVm, Reservation>();
+
+            CreateMap<Service, ServiceVm>();
+            CreateMap<CreateServiceVm, Service>();
         }
     }
 }
