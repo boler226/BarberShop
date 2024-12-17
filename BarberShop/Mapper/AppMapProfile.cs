@@ -31,6 +31,9 @@ namespace BarberShop.Mapper
 
             CreateMap<Position, PositionVm>();
             CreateMap<CreatePositionVm, Position>();
+
+            CreateMap<Reservation, ReservationVm>();
+            CreateMap<CreateReservationVm, Reservation>();
         }
     }
 }
