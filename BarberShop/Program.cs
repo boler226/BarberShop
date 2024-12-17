@@ -5,7 +5,6 @@ using BarberShop.Services.ControllerServices.Interfaces;
 using BarberShop.Services.ControllerServices;
 using BarberShop.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +41,7 @@ builder.Services.AddTransient<ICitiesControllerService, CitiesControllerService>
 builder.Services.AddTransient<IBarbershopControllerService, BarbershopControllerService>();
 builder.Services.AddTransient<IPositionControllerService, PositionControllerService>();
 builder.Services.AddTransient<IReservationControllerService, ReservationsControllerService>();
+builder.Services.AddTransient<IServicesControllerService, ServicesControllerService>();
 
 
 
