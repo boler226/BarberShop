@@ -10,10 +10,9 @@ namespace BarberShop.Database.EntityTypeConfigurations
 
             builder.HasKey(r => r.Id);
 
-            builder.HasMany(r => r.Services)
-                   .WithOne(s => s.Reservation)
-                   .HasForeignKey(r => r.ReservationId)
-                   .IsRequired();
+            builder.HasMany(r => r.ReservationService)
+                   .WithOne(r => r.Reservation)
+                   .HasForeignKey(rs => rs.ReservationId);
 
             builder.HasOne(r => r.Employee)
                    .WithMany(e => e.Reservations)

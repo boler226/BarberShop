@@ -20,8 +20,8 @@ namespace BarberShop.Database.EntityTypeConfigurations
                     .IsRequired();
 
             builder.HasOne(e => e.Position)
-                   .WithOne(p => p.Employee)
-                   .HasForeignKey<Employee>(e => e.PositionId)
+                   .WithMany(p => p.Employee)
+                   .HasForeignKey(e => e.PositionId)
                    .OnDelete(DeleteBehavior.Restrict)
                    .IsRequired();
 
