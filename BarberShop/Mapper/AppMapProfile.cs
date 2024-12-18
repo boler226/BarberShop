@@ -10,6 +10,7 @@ using BarberShop.ViewModels.Position;
 using BarberShop.ViewModels.Reservation;
 using BarberShop.ViewModels.Service;
 using BarberShop.ViewModels.Employee;
+using BarberShop.ViewModels.Comment;
 
 
 namespace BarberShop.Mapper
@@ -44,6 +45,9 @@ namespace BarberShop.Mapper
 
             CreateMap<Employee, EmployeeVm>();
             CreateMap<CreateEmployeeVm, Employee>();
+
+            CreateMap<Comment, CommentVm>();
+            CreateMap<CreateCommentVm, Comment>();
         }
     }
 }
