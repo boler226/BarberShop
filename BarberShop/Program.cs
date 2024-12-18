@@ -42,6 +42,7 @@ builder.Services.AddTransient<IBarbershopControllerService, BarbershopController
 builder.Services.AddTransient<IPositionControllerService, PositionControllerService>();
 builder.Services.AddTransient<IReservationControllerService, ReservationsControllerService>();
 builder.Services.AddTransient<IServicesControllerService, ServicesControllerService>();
+builder.Services.AddTransient<IEmployeesControllerService, EmployeesControllerService>();
 
 
 
