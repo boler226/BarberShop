@@ -43,6 +43,7 @@ builder.Services.AddTransient<IPositionControllerService, PositionControllerServ
 builder.Services.AddTransient<IReservationControllerService, ReservationsControllerService>();
 builder.Services.AddTransient<IServicesControllerService, ServicesControllerService>();
 builder.Services.AddTransient<IEmployeesControllerService, EmployeesControllerService>();
+builder.Services.AddTransient<ICommentsControllerService, CommentsControllerService>(); 
 
 
 
