@@ -6,6 +6,8 @@ using BarberShop.Services.ControllerServices;
 using BarberShop.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,45 @@ builder.Services.AddDbContext<DataContext>(
         }
     }
 );
+
+builder.Services
+        .AddIdentity<User, Role>(options => {
+            options.Stores.MaxLengthForKeys = 128;
+
+            options.Password.RequiredLength = 8;
+            options.Password.RequireDigit = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireLowercase = false;
+        })
+        .AddEntityFrameworkStores<DataContext>()
+        .AddDefaultTokenProviders();
+
+var singinKey = new SymmetricSecurityKey(
+        Encoding.UTF8.GetBytes(
+                builder.Configuration["Authentication:Jwt:SecretKEy"]
+                    ?? throw new NullReferenceException("Authentication:Jwt:SecretKey")
+        )
+);
+
+builder.Services
+        .AddAuthentication(options => {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options => {
+            options.SaveToken = true;
+            options.RequireHttpsMetadata = false;
+            options.TokenValidationParameters = new TokenValidationParameters() {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                IssuerSigningKey = singinKey,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.Zero
+            };
+        });
 
 
 builder.Services.AddControllers();
