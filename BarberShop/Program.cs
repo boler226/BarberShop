@@ -6,8 +6,13 @@ using BarberShop.Services.ControllerServices;
 using BarberShop.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using BarberShop.Database.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using FluentValidation;
+using BarberShop.Validators.Adresses;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +79,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(AppMapProfile));
 
 builder.Services.AddTransient<IImageService, ImageService>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateAddressValidator>();
 
 builder.Services.AddTransient<IAddressesControllerService, AddressesControllerService>();
 builder.Services.AddTransient<IAffiliateControllerService, AffiliateControllerService>();

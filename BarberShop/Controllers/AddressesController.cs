@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using BarberShop.Database.Context;
 using BarberShop.Services.ControllerServices.Interfaces;
 using BarberShop.ViewModels.Address;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +14,10 @@ namespace BarberShop.Controllers
     public class AddressesController(
         DataContext context,
         IMapper mapper,
-        IAddressesControllerService service
+        IAddressesControllerService service,
+        IValidator<CreateAddressVm> createValidator,
+        IValidator<UpdateAddressVm> updateValidator
+
         ) : ControllerBase
     {
         [HttpGet]
@@ -38,7 +42,12 @@ namespace BarberShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] CreateAddressVm vm) { 
+        public async Task<IActionResult> Create([FromForm] CreateAddressVm vm) {
+            var validatorResult = await createValidator.ValidateAsync(vm);
+
+            if (!validatorResult.IsValid) 
+                return BadRequest(validatorResult.Errors);
+            
             await service.CreateAsync(vm);
 
             return Ok();
@@ -46,6 +55,11 @@ namespace BarberShop.Controllers
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromForm] UpdateAddressVm vm) { 
+            var validatorResult = await updateValidator.ValidateAsync(vm);
+
+            if (!validatorResult.IsValid)
+                return BadRequest(validatorResult.Errors);
+
             await service.UpdateAsync(vm);
 
             return Ok();

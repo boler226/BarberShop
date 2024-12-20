@@ -3,7 +3,6 @@
     public class UpdateReservationVm
     {
         public long Id { get; set; }
-
         public double Price { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
