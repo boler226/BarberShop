@@ -1,4 +1,5 @@
 ﻿using BarberShop.Database.Context;
+using BarberShop.Services.Interfaces;
 using BarberShop.ViewModels.Address;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -6,12 +7,9 @@ using Microsoft.EntityFrameworkCore;
 namespace BarberShop.Validators.Adresses
 {
     public class CreateAddressValidator : AbstractValidator<CreateAddressVm> {
-        private readonly DataContext _context;
-        public CreateAddressValidator(DataContext context) {
-            _context = context;
-
+        public CreateAddressValidator( IExistingEntityCheckerService checkerService) {
             RuleFor(a => a.CityId)
-                    .MustAsync(IsCorrectAddressCityId)
+                    .MustAsync(checkerService.IsCorrectCityId)
                         .WithMessage("City with this id is not exists");
 
             RuleFor(a => a.Street)
@@ -33,10 +31,6 @@ namespace BarberShop.Validators.Adresses
             RuleFor(a => a.Latitude)
                 .InclusiveBetween(-90, 90)
                     .WithMessage("Latitude must be between -90 and 90 degrees");
-        }
-
-        private async Task<bool> IsCorrectAddressCityId(long id, CancellationToken token) {
-            return await _context.Cities.AnyAsync(c => c.Id == id, token);
         }
     }
 }
