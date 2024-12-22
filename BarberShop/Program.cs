@@ -13,6 +13,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using FluentValidation;
 using BarberShop.Validators.Adresses;
+using BarberShop.Validators.Affiliate;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,6 +80,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(AppMapProfile));
 
 builder.Services.AddTransient<IImageService, ImageService>();
+builder.Services.AddTransient<IExistingEntityCheckerService, ExistingEntityCheckerService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateAddressValidator>();
 
