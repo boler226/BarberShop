@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using BarberShop.Database.Context;
 using BarberShop.Services.ControllerServices.Interfaces;
 using BarberShop.ViewModels.Reservation;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +14,9 @@ namespace BarberShop.Controllers
     public class ReservationsController(
         DataContext context,
         IMapper mapper,
-        IReservationControllerService service
+        IReservationControllerService service,
+        IValidator<CreateReservationVm> createValidator,
+        IValidator<UpdateReservationVm> updateValidator
         ) : ControllerBase
     {
         [HttpGet]
@@ -39,13 +42,23 @@ namespace BarberShop.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateReservationVm vm) { 
+            var validatorResult = await createValidator.ValidateAsync(vm);
+
+            if (!validatorResult.IsValid)
+                return BadRequest(validatorResult.Errors);
+            
             await service.CreateAsync(vm);
 
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromForm] UpdateReservationVm vm) { 
+        public async Task<IActionResult> Update([FromForm] UpdateReservationVm vm) {
+            var validatorResult = await updateValidator.ValidateAsync(vm);
+
+            if (!validatorResult.IsValid)
+                return BadRequest(validatorResult.Errors);
+
             await service.UpdateAsync(vm);
 
             return Ok();

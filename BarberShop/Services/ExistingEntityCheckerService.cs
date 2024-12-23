@@ -1,4 +1,5 @@
-﻿using BarberShop.Database.Context;
+﻿using AutoMapper.Configuration.Annotations;
+using BarberShop.Database.Context;
 using BarberShop.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,6 +38,15 @@ namespace BarberShop.Services
 
         public async Task<bool> IsCorrectServiceId(long id, CancellationToken cancellationToken) =>
                 await context.Services.AnyAsync(s => s.Id == id, cancellationToken);
+        
+        public async Task<bool> IsCorrectServicesId(ICollection<long> servicesId, CancellationToken cancellationToken) {
+            var countExisting = await context.Services
+                .Where(s => servicesId.Contains(s.Id))
+                .CountAsync(cancellationToken);
+
+            return countExisting == servicesId.Count();
+        }
+
 
         public async Task<bool> IsCorrectUserId(long id, CancellationToken cancellationToken) => 
                 await context.Users.AnyAsync(u => u.Id == id, cancellationToken);

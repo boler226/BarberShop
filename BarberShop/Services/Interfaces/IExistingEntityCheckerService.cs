@@ -10,7 +10,8 @@
         Task<bool> IsCorrectEmployeeId(long id, CancellationToken cancellationToken);
         Task<bool> IsCorrectPositionId(int id, CancellationToken cancellationToken);
         Task<bool> IsCorrectReservationId(long id, CancellationToken cancellationToken);
-        Task<bool> IsCorrectServiceId(long id, CancellationToken cancellationToken); 
+        Task<bool> IsCorrectServiceId(long id, CancellationToken cancellationToken);
+        Task<bool> IsCorrectServicesId(ICollection<long> servicesId, CancellationToken cancellationToken);
         Task<bool> IsCorrectUserId(long id, CancellationToken cancellationToken);
     }
 }
