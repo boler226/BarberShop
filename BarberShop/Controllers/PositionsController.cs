@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using BarberShop.Database.Context;
 using BarberShop.Services.ControllerServices.Interfaces;
 using BarberShop.ViewModels.Position;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +14,8 @@ namespace BarberShop.Controllers
     public class PositionsController(
         DataContext context,
         IMapper mapper,
-        IPositionControllerService service
+        IPositionControllerService service,
+        IValidator<CreatePositionVm> createValidator
         ) : ControllerBase
     {
         [HttpGet]
@@ -39,6 +41,11 @@ namespace BarberShop.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Create(CreatePositionVm vm) { 
+            var validatorResult = await createValidator.ValidateAsync(vm);
+
+            if (!validatorResult.IsValid)
+                return BadRequest(validatorResult.Errors);
+
             await service.CreateAsync(vm);
 
             return Ok();
