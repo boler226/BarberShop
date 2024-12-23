@@ -4,6 +4,7 @@ using BarberShop.Database.Context;
 using BarberShop.Database.Entities;
 using BarberShop.Services.ControllerServices.Interfaces;
 using BarberShop.ViewModels.Employee;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +15,9 @@ namespace BarberShop.Controllers
     public class EmployeesController(
          DataContext context,
          IMapper mapper,
-         IEmployeesControllerService service
+         IEmployeesControllerService service,
+         IValidator<CreateEmployeeVm> createValidator,
+         IValidator<UpdateEmployeeVm> updateValidator
         ) : ControllerBase
     {
         [HttpGet]
@@ -40,6 +43,11 @@ namespace BarberShop.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateEmployeeVm vm) { 
+            var validatorResult = await createValidator.ValidateAsync(vm);
+
+            if (!validatorResult.IsValid)
+                return BadRequest(validatorResult.Errors);
+
             await service.CreateAsync(vm);  
 
             return Ok();
@@ -47,6 +55,11 @@ namespace BarberShop.Controllers
 
         [HttpPut]
         public async Task<IActionResult> Update([FromForm] UpdateEmployeeVm vm) { 
+            var validatorResult = await updateValidator.ValidateAsync(vm);
+
+            if (!validatorResult.IsValid)
+                return BadRequest(validatorResult.Errors);
+            
             await service.UpdateAsync(vm);
 
             return Ok();

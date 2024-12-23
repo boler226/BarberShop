@@ -29,7 +29,7 @@ namespace BarberShop.Services
         public async Task<bool> IsCorrectEmployeeId(long id, CancellationToken cancellationToken) =>
                 await context.Employees.AnyAsync(e => e.Id == id, cancellationToken);
 
-        public async Task<bool> IsCorrectPositionId(long id, CancellationToken cancellationToken) =>
+        public async Task<bool> IsCorrectPositionId(int id, CancellationToken cancellationToken) =>
                 await context.Positions.AnyAsync(p => p.Id == id, cancellationToken);
 
         public async Task<bool> IsCorrectReservationId(long id, CancellationToken cancellationToken) =>
