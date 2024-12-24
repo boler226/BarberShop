@@ -81,6 +81,7 @@ builder.Services.AddAutoMapper(typeof(AppMapProfile));
 
 builder.Services.AddTransient<IImageService, ImageService>();
 builder.Services.AddTransient<IExistingEntityCheckerService, ExistingEntityCheckerService>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateAddressValidator>();
 
