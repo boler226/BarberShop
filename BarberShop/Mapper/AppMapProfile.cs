@@ -11,6 +11,8 @@ using BarberShop.ViewModels.Reservation;
 using BarberShop.ViewModels.Service;
 using BarberShop.ViewModels.Employee;
 using BarberShop.ViewModels.Comment;
+using BarberShop.Database.Entities.Identity;
+using BarberShop.ViewModels.Account;
 
 
 namespace BarberShop.Mapper
@@ -48,6 +50,9 @@ namespace BarberShop.Mapper
 
             CreateMap<Comment, CommentVm>();
             CreateMap<CreateCommentVm, Comment>();
+
+            CreateMap<User, UserVm>();
+            CreateMap<RegisterVm, User>();
         }
     }
 }
