@@ -23,6 +23,11 @@ namespace BarberShop.Database.EntityTypeConfigurations
                     .HasForeignKey(ba => ba.AddressId)
                     .IsRequired();
 
+            builder.HasMany(b => b.Employers)
+                   .WithOne()
+                   .HasForeignKey(ba => ba.BarbershopId)
+                   .IsRequired();
+
             builder.HasOne(b => b.Affiliate)
                     .WithMany(a => a.Barbershops)
                     .HasForeignKey(ba => ba.AffiliateId)

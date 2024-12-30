@@ -9,5 +9,6 @@
         public Address Adddress { get; set; } = null!;
         public long AffiliateId { get; set; }
         public Affiliate Affiliate { get; set; } = null!;
+        public ICollection<Employee> Employers { get; set; } = new List<Employee>();
     }
 }
