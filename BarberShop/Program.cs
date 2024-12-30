@@ -13,8 +13,6 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using FluentValidation;
 using BarberShop.Validators.Adresses;
-using BarberShop.Validators.Affiliate;
-using BarberShop.Validators.Account;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,7 +81,11 @@ builder.Services.AddAutoMapper(typeof(AppMapProfile));
 builder.Services.AddTransient<IImageService, ImageService>();
 builder.Services.AddTransient<IImageValidator, ImageValidator>();
 builder.Services.AddTransient<IExistingEntityCheckerService, ExistingEntityCheckerService>();
+
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<ICountryDataSeeder, CountryDataSeeder>();
+builder.Services.AddScoped<IIdentitySeeder, IdentitySeeder>();
+builder.Services.AddScoped<IDataSeeder, DataSeeder>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateAddressValidator>();
 
@@ -129,5 +131,11 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+await using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateAsyncScope()) {
+    await scope.ServiceProvider.GetRequiredService<ICountryDataSeeder>().SeedAsync();
+    await scope.ServiceProvider.GetRequiredService<IIdentitySeeder>().SeedAsync();
+    await scope.ServiceProvider.GetRequiredService<IDataSeeder>().SeedAsync();
+}
 
 app.Run();

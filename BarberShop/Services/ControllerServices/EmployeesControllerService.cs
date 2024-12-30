@@ -38,6 +38,7 @@ namespace BarberShop.Services.ControllerServices
             employee.Name = vm.Name;
             employee.Rating = vm.Rating;
             employee.PositionId = vm.PositionId;
+            employee.BarbershopId = vm.BarbershopId;
 
             employee.Image = await imageService.SaveImageAsync(vm.Image);
 
