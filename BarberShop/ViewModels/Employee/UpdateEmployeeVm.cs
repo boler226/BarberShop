@@ -7,5 +7,6 @@
         public IFormFile Image { get; set; } = null!;
         public int Rating { get; set; }
         public int PositionId { get; set; }
+        public long BarbershopId { get; set; }
     }
 }

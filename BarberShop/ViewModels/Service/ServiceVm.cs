@@ -8,6 +8,6 @@ namespace BarberShop.ViewModels.Service
         public string Name { get; set; } = null!;
         public double Price { get; set; }
         public double Time { get; set; }
-        public ReservationVm Reservation { get; set; }
+        public ReservationVm Reservation { get; set; } = null!;
     }
 }
