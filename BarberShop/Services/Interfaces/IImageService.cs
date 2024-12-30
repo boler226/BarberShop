@@ -15,6 +15,8 @@
         void DeleteImages(IEnumerable<string> images);
         void DeleteImagesIfExists(IEnumerable<string> images);
 
+        Task<string> GetImageAsBase64Async(HttpClient httpClient, string imageUrl);
+
         string ImagesDir { get; }
     }
 }

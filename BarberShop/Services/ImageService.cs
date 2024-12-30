@@ -149,6 +149,11 @@ namespace BarberShop.Services
                 DeleteImageIfExists(image);
         }
 
+        public async Task<string> GetImageAsBase64Async(HttpClient httpClient, string imageUrl) {
+            var imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
+            return Convert.ToBase64String(imageBytes);
+        }
+
         private List<int> Sizes
         {
             get
