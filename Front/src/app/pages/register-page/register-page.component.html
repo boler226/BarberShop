@@ -1,0 +1,37 @@
+<div class="register-container">
+  <h1>Registration</h1>
+  <form [formGroup]="form" (ngSubmit)="onRegister()" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input id="firstName" formControlName="firstName" type="text" placeholder="Enter your first name" />
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input id="lastName" formControlName="lastName" type="text" placeholder="Enter your last name" />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" formControlName="email" type="email" placeholder="Enter your email" />
+    </div>
+
+    <div class="form-group">
+      <label for="userName">Username</label>
+      <input id="userName" formControlName="userName" type="text" placeholder="Choose a username" />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" formControlName="password" type="password" placeholder="Enter your password" />
+    </div>
+
+    <div class="form-group">
+      <label for="image">Profile Image</label>
+      <input id="image" type="file" (change)="onFileChange($event)" />
+    </div>
+
+    <button type="submit" [disabled]="form.invalid">Register</button>
+  </form>
+
+</div>
