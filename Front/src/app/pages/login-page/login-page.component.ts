@@ -1,7 +1,8 @@
 import {Component, inject} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../auth/auth.service';
+import {tap} from 'rxjs';
 
 @Component({
   selector: 'app-login-page',
@@ -14,7 +15,8 @@ import {AuthService} from '../../auth/auth.service';
   styleUrl: './login-page.component.scss'
 })
 export class LoginPageComponent {
-  authService: AuthService = inject(AuthService);
+  authService: AuthService = inject(AuthService)
+  private router = inject(Router)
 
   form = new FormGroup({
     email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
@@ -28,9 +30,13 @@ export class LoginPageComponent {
         password: this.form.get('password')?.value as string
       }
 
-      this.authService.login(loginData).subscribe({
-        next: (response) => console.log('Login Successful:', response),
-        error: (err) => console.error('Login Failed:', err)
+      this.authService.login(loginData)
+        .subscribe({
+          next: (response) => {
+            console.log('Login Successful:', response)
+            this.router.navigate(['/'])
+          },
+          error: (err) => console.error('Login Failed:', err)
       })
     } else {
       console.log('Login Failed: Invalid Form');
