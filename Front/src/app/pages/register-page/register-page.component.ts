@@ -1,6 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../auth/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-register-page',
@@ -12,8 +13,9 @@ import {AuthService} from '../../auth/auth.service';
   styleUrl: './register-page.component.scss'
 })
 export class RegisterPageComponent {
-  authService: AuthService = inject(AuthService);
-  private selectedFile: File | null = null;
+  authService: AuthService = inject(AuthService)
+  private selectedFile: File | null = null
+  private router = inject(Router)
 
   form = new FormGroup({
     firstName: new FormControl(null, [Validators.required]),
@@ -27,7 +29,7 @@ export class RegisterPageComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       //@ts-ignore
-      this.selectedFile = input.files[0];
+      this.selectedFile = input.files[0]
     }
   }
 
@@ -41,9 +43,13 @@ export class RegisterPageComponent {
         password: this.form.get('password')?.value ?? '',
         image: this.selectedFile as File
       }
-      this.authService.register(registerData).subscribe({
-        next: (response) => console.log('Registration Successful:', response),
-        error: (err) => console.error('Registration Failed:', err)
+      this.authService.register(registerData)
+        .subscribe({
+          next: (response) => {
+            console.log('Registration Successful:', response)
+            this.router.navigate(['/login']);
+          },
+          error: (err) => console.error('Registration Failed:', err)
       })
     } else {
       console.log('Registration Failed: Invalid Form');
