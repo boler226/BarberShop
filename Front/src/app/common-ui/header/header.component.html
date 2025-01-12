@@ -1,0 +1,43 @@
+<div class="header-container">
+  <img src="/assets/images/barbershop-icon.png" alt="icon" class="header-logo" />
+
+  <div class="header-location">
+    <div class="dropdown" *ngIf="countries">
+      <button>
+        <span class="header-location-countries">
+          <img *ngIf="selectedCountry?.image" [src]="'https://localhost:7142/Data/Images/200_' + selectedCountry?.image" alt="icon"/>
+          <label>{{ selectedCountry?.name || countries[0]?.name }}</label>
+        </span>
+      </button>
+
+      <ul class="dropdown-menu">
+        <li *ngFor="let country of countries" (click)="selectCountry(country)">
+          <img [src]="'https://localhost:7142/Data/Images/200_' + country.image" [alt]="country.name + ' Flag'" />
+          {{ country.name }}
+        </li>
+      </ul>
+
+    </div>
+
+    <div class="dropdown" *ngIf="selectedCountry">
+      <button>
+        <span class="header-location-cities">
+          <label>{{ selectedCity?.name || 'Міста' }}</label>
+        </span>
+      </button>
+
+      <ul class="dropdown-menu">
+        <li *ngFor="let city of selectedCountry.cities" (click)="selectCity(city)">
+          {{ city.name }}
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <div class="button-container">
+    <button>Ціни</button>
+    <button>Барбери</button>
+    <button>Контакти</button>
+  </div>
+</div>

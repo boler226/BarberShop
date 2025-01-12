@@ -1,0 +1,146 @@
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  padding: 0 20px;
+  background-color: #333;
+  color: #fff;
+}
+.header-logo {
+  height: 100%;
+  max-height: 60px;
+}
+
+.header-location {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-location button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: 100px;
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 0 10px;
+  font-size: 16px;
+}
+
+.header-location button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.button-container button {
+  flex: 1;
+  height: 100%;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  padding: 0 20px;
+  cursor: pointer;
+}
+
+.button-container button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.header-location-countries {
+  display: flex;
+  align-items: center;
+}
+
+.header-location-countries img {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.header-location-countries img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown {
+  position: relative;
+  height: 100%;
+}
+
+.dropdown button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: 120px;
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 0 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #444;
+  color: #fff;
+  list-style: none;
+  margin: 0;
+
+  display: none;
+  width: 200px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-menu li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.dropdown-menu li img {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.dropdown-menu li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.dropdown:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+}
