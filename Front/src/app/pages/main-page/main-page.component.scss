@@ -1,0 +1,47 @@
+.main-container {
+  position: relative;
+  display: flex;
+
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background: #888;
+  overflow: hidden;
+}
+
+.main-router {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  height: 800px;
+  padding: 100px 0 0 200px;
+  background: #595858;
+  z-index: 1;
+}
+
+.main-router button {
+  width: 150px;
+  height: 50px;
+  background: #444;
+  font-weight: 600;
+  color: #fff;
+  border: 2px solid #fff;
+}
+
+.main-router h1 {
+  font-weight: 600;
+  font-size: 64px;
+  color: #fff;
+}
+
+.video-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
