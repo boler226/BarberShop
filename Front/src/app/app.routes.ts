@@ -4,10 +4,12 @@ import {RegisterPageComponent} from './pages/register-page/register-page.compone
 import {LayoutComponent} from './common-ui/layout/layout.component';
 import {canActivateAuth} from './auth/access.guard';
 import {MainPageComponent} from './pages/main-page/main-page.component';
+import {ContactPageComponent} from './pages/contact-page/contact-page.component';
 
 export const routes: Routes = [
   {path: '', component: LayoutComponent, children: [
       {path: '', component: MainPageComponent},
+      {path: 'contacts', component: ContactPageComponent}
     ],
     canActivate: [canActivateAuth]
   },
