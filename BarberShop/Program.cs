@@ -120,14 +120,22 @@ if (!Directory.Exists(imagesDirPath))
     Directory.CreateDirectory(imagesDirPath);
 }
 
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(imagesDirPath),
-    RequestPath = "/images"
+app.UseStaticFiles(new StaticFileOptions {
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "Data/Images")),
+    RequestPath = "/Data/Images"
 });
 
-app.UseHttpsRedirection();
+app.UseCors(
+    configuration => configuration
+        .WithOrigins("http://localhost:4200")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+);
 
+
+app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

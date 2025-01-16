@@ -40,6 +40,18 @@ namespace BarberShop.Controllers
             return Ok(affiliate);
         }
 
+        [HttpGet("{name}")]
+        public async Task<IActionResult> GetByName(string name) {
+            var affiliate = await context.Affiliates
+                    .ProjectTo<AffiliateVm>(mapper.ConfigurationProvider)
+                    .FirstOrDefaultAsync(a => Equals(a.City.Name, name));
+
+            if (affiliate is null)
+                return NotFound();
+
+            return Ok(affiliate);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateAffiliateVm vm) { 
             var validatorResult = await createValidator.ValidateAsync(vm);
