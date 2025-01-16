@@ -1,7 +1,8 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {City, Country} from '../../interfaces/country/country.interface';
-import {CountryService} from '../../services/country.service';
+import {CountryService} from '../../services/country/country.service';
+import {LocationService} from '../../services/location.service';
 
 @Component({
   selector: 'app-header',
@@ -16,13 +17,15 @@ import {CountryService} from '../../services/country.service';
 })
 export class HeaderComponent implements OnInit {
   countries: Country[] = []
-  selectedCountry?: Country
-  selectedCity?: City
+  selectedCountry?: Country | null
+  selectedCity?: City | null
 
-  countryService: CountryService = inject(CountryService)
+  private countryService: CountryService = inject(CountryService)
+  private locationService: LocationService = inject(LocationService)
 
   ngOnInit(): void {
     this.fetchCountries()
+    this.subscribeToLocationChanges()
   }
 
   fetchCountries(): void {
@@ -35,7 +38,7 @@ export class HeaderComponent implements OnInit {
           this.selectCity(this.countries[0].cities[0])
         }
       },
-      error: (err) => console.error('Fetch countries failed:', err)
+      error: (err) => console.error('Fetch country failed:', err)
     })
   }
 
@@ -46,5 +49,15 @@ export class HeaderComponent implements OnInit {
 
   selectCity(city: City): void {
     this.selectedCity = city
+  }
+
+  subscribeToLocationChanges(): void {
+    this.locationService.selectedCountry$.subscribe((country) => {
+      this.selectedCountry = country
+    })
+
+    this.locationService.selectedCity$.subscribe((city)=> {
+      this.selectedCity = city
+    })
   }
 }
