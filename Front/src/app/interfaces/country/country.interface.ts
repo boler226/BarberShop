@@ -1,3 +1,5 @@
+import {City} from '../city/city.interface';
+
 export interface Country {
   id: number;
   name: string;
@@ -5,7 +7,3 @@ export interface Country {
   cities: City[];
 }
 
-export interface City {
-  id: number;
-  name: string;
-}
