@@ -1,8 +1,11 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
-import {City, Country} from '../../interfaces/country/country.interface';
+import {Country} from '../../interfaces/country/country.interface';
+import {City} from '../../interfaces/city/city.interface';
 import {CountryService} from '../../services/country/country.service';
 import {LocationService} from '../../services/location.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-header',
@@ -22,6 +25,7 @@ export class HeaderComponent implements OnInit {
 
   private countryService: CountryService = inject(CountryService)
   private locationService: LocationService = inject(LocationService)
+  private router: Router = inject(Router)
 
   ngOnInit(): void {
     this.fetchCountries()
@@ -35,7 +39,6 @@ export class HeaderComponent implements OnInit {
 
         if (this.countries.length > 0) {
           this.selectCountry(this.countries[0])
-          this.selectCity(this.countries[0].cities[0])
         }
       },
       error: (err) => console.error('Fetch country failed:', err)
@@ -44,20 +47,36 @@ export class HeaderComponent implements OnInit {
 
   selectCountry(country: Country): void {
     this.selectedCountry = country
-    this.selectedCity = country.cities[0]
+    this.locationService.setCountry(country)
   }
 
   selectCity(city: City): void {
-    this.selectedCity = city
+    this.selectedCity = city;
+    this.locationService.setCity(city);
   }
 
   subscribeToLocationChanges(): void {
-    this.locationService.selectedCountry$.subscribe((country) => {
-      this.selectedCountry = country
+    this.locationService.selectedCity$.subscribe((city) => {
+      if (this.isContactsPage() && city) {
+        this.locationService.triggerAffiliateFetch(city.name)
+      }
     })
 
-    this.locationService.selectedCity$.subscribe((city)=> {
-      this.selectedCity = city
+    this.locationService.selectedCountry$.subscribe((country) => {
+      if (this.isContactsPage() && country) {
+        const defaultCity = country.cities[0]
+        if (defaultCity) {
+          this.locationService.triggerAffiliateFetch(defaultCity.name)
+        }
+      }
     })
+  }
+
+  private isContactsPage(): boolean {
+    return this.router.url === '/contacts';
+  }
+
+  toContacts(): void {
+    this.router.navigate(['/contacts'])
   }
 }
