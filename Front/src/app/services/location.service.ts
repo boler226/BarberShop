@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 import {Country} from '../interfaces/country/country.interface';
-import {City} from '../interfaces/contact/contact.interface';
+import {City} from '../interfaces/city/city.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -9,26 +9,29 @@ import {City} from '../interfaces/contact/contact.interface';
 export class LocationService {
   private selectedCountrySubject = new BehaviorSubject<Country | null>(null)
   private  selectedCitySubject = new BehaviorSubject<City | null>(null)
+  private affiliateFetchTrigger = new Subject<string>()
 
   selectedCountry$ = this.selectedCountrySubject.asObservable()
   selectedCity$ = this.selectedCitySubject.asObservable()
+  affiliateFetchTrigger$ = this.affiliateFetchTrigger.asObservable()
 
-  setCountry(country: Country): void {
-    this.selectedCountrySubject.next(country)
-    if (country.cities.length > 0) {
-      this.setCity(<City>country.cities[0])
-    }
-  }
 
   setCity(city: City): void {
     this.selectedCitySubject.next(city)
   }
 
-  getCountry(): Country | null {
-    return this.selectedCountrySubject.value
+  setCountry(country: Country): void {
+    this.selectedCountrySubject.next(country)
+    if (country.cities.length > 0) {
+      this.setCity(country.cities[0])
+    }
+  }
+
+  triggerAffiliateFetch(cityName: string): void {
+    this.affiliateFetchTrigger.next(cityName)
   }
 
   getCity(): City | null {
-    return this.selectedCitySubject.value
+    return this.selectedCitySubject.value;
   }
 }
