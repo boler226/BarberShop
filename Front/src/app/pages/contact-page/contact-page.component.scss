@@ -1,0 +1,85 @@
+.contacts-container {
+  font-family: 'Arial', sans-serif;
+  max-width: 800px;
+  min-height: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contacts-container h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+.main-info {
+  margin-top: 20px;
+}
+
+.main-info h3 {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+  color: #e63946;
+  text-align: center;
+}
+
+.barbershop-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.barbershop-menu li {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.barbershop-menu li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(255, 0, 0, 0.25);
+}
+
+.barbershop-menu h3 {
+  font-size: 1.2em;
+  margin: 0;
+  color: #444;
+  cursor: pointer;
+}
+
+.barbershop-menu label {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.95em;
+  color: #666;
+  cursor: pointer;
+}
+
+.barbershop-menu label:first-of-type {
+  margin-top: 10px;
+}
+
+p {
+  font-size: 1em;
+  color: #777;
+  text-align: center;
+}
+
+p a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+p a:hover {
+  text-decoration: underline;
+}

@@ -1,1 +1,23 @@
-<p>contact-page works!</p>
+<div class="contacts-container">
+  <h1>Контакти</h1>
+  <div *ngIf="contacts; else noContacts" class="main-info">
+
+    <h3>{{ contacts?.city?.name }}</h3>
+    <ul class="barbershop-menu" *ngIf="contacts?.barbershops?.length; else noBarbershops">
+      <li *ngFor="let barbershop of contacts.barbershops" (click)="onBarbershopClick(barbershop)">
+        <h3>{{ barbershop.name }}</h3>
+        <label>Телефон: {{ barbershop.phone }}</label>
+        <label *ngIf="barbershop.address">Адреса: {{ barbershop.address.street }}, {{ barbershop.address.houseNumber }}</label>
+        <label *ngIf="!barbershop.address">Адреса: Немає даних</label>
+      </li>
+    </ul>
+
+    <ng-template #noBarbershops>
+      <p>Барбершопів не знайдено.</p>
+    </ng-template>
+  </div>
+
+  <ng-template #noContacts>
+    <p style="text-align: center;">Дані про заклад наразі недоступні.</p>
+  </ng-template>
+</div>
