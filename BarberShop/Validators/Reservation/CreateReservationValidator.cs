@@ -10,6 +10,14 @@ namespace BarberShop.Validators.Reservation
                 .MustAsync(checkerService.IsCorrectServicesId)
                     .WithMessage("One of services does not exist");
 
+            RuleFor(r => r.EmployeeId)
+                .MustAsync(checkerService.IsCorrectEmployeeId)
+                    .WithMessage("Employee with this id is not exists");
+
+            RuleFor(r => r.BarbershopId)    
+                .MustAsync(checkerService.IsCorrectBarbershopId)
+                    .WithMessage("Barbeshop with this id is not exists");
+
             RuleFor(r => r.UserId)
                 .MustAsync(checkerService.IsCorrectUserId)
                     .WithMessage("User with this id is not exists");
