@@ -25,6 +25,12 @@ namespace BarberShop.Database.EntityTypeConfigurations
                    .HasForeignKey(r => r.UserId)
                    .OnDelete(DeleteBehavior.Restrict)
                    .IsRequired();
+
+            builder.HasOne(r => r.Barbershop)
+                    .WithMany()
+                    .HasForeignKey(r => r.BarbershopId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
         }
     }
 }

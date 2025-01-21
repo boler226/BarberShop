@@ -9,6 +9,8 @@ namespace BarberShop.Database.Entities
         public DateTime From { get; set; }
         public DateTime To { get; set; }
         public ICollection<ReservationService> ReservationService { get; set; } = new List<ReservationService>();
+        public long BarbershopId { get; set; }
+        public Barbershop Barbershop { get; set; } = null!;
         public long EmployeeId { get; set; }
         public Employee Employee { get; set; } = null!;
         public long UserId { get; set; }

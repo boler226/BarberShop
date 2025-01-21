@@ -39,6 +39,8 @@ namespace BarberShop.Services.ControllerServices
             reservation.From = vm.From;
             reservation.To = vm.To;
             reservation.UserId = vm.UserId;
+            reservation.EmployeeId = vm.EmployeeId;
+            reservation.BarbershopId = vm.BarbershopId;
 
             if (vm.ServicesId != null && vm.ServicesId.Any())
             {
