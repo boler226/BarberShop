@@ -11,10 +11,10 @@ export const routes: Routes = [
   {path: '', component: LayoutComponent, children: [
       {path: '', component: MainPageComponent},
       {path: 'contacts', component: ContactPageComponent},
-      {path: 'reservation', component: ReservationPageComponent},
     ],
     canActivate: [canActivateAuth]
   },
+  {path: 'reservation', component: ReservationPageComponent, canActivate: [canActivateAuth]},
   {path: 'login', component: LoginPageComponent},
   {path: 'register', component: RegisterPageComponent}
 ];
