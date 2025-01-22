@@ -1,4 +1,4 @@
-Фimport {HttpHandlerFn, HttpHeaders, HttpInterceptorFn, HttpRequest} from '@angular/common/http';
+import {HttpHandlerFn, HttpInterceptorFn, HttpRequest} from '@angular/common/http';
 import {AuthService} from './auth.service';
 import {inject} from '@angular/core';
 import {catchError, switchMap} from 'rxjs';
