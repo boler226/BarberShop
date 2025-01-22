@@ -1,13 +1,17 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {TokenResponse} from './auth.interface';
-import {tap} from 'rxjs';
+import {catchError, of, tap, throwError} from 'rxjs';
+import {CookieService} from 'ngx-cookie-service';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   http: HttpClient = inject(HttpClient)
+  cookieService = inject(CookieService)
+  router = inject(Router)
   baseUrl: string = 'https://localhost:7142/api/Accounts/'
 
   accessToken: string | null = null
@@ -28,11 +32,7 @@ export class AuthService {
       formData
     ).pipe(
       tap(val => {
-        this.accessToken = val.access_token
-        this.refreshToken = val.refresh_token
-
-        localStorage.setItem('accessToken', val.access_token);
-        localStorage.setItem('refreshToken', val.refresh_token);
+       this.saveTokens(val)
       })
     )
   }
@@ -49,7 +49,44 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}Registration`, formData);
   }
 
+  refresh() {
+    return this.http.post<TokenResponse>(
+      `${this.baseUrl}Refresh`, {
+        refreshToken: this.refreshToken
+      })
+      .pipe(
+        tap(val => {
+          this.saveTokens(val)
+        }),
+
+        catchError(error => {
+          this.logout()
+          return throwError(error)
+        })
+      )
+  }
+
+  logout() {
+    this.cookieService.deleteAll()
+    this.accessToken = null
+    this.refreshToken = null
+    this.router.navigate(['/login'])
+  }
+
+  saveTokens(res: TokenResponse) {
+    this.accessToken = res.access_token
+    this.refreshToken = res.refresh_token
+
+    this.cookieService.set('accessToken', this.accessToken)
+    this.cookieService.set('refreshToken', this.refreshToken)
+  }
+
   get isAuth() {
-    return !!this.accessToken || !!localStorage.getItem('accessToken');
+    if (!this.accessToken) {
+      this.accessToken = this.cookieService.get('accessToken')
+      this.refreshToken = this.cookieService.get('refreshToken')
+    }
+
+    return !!this.accessToken
   }
 }
