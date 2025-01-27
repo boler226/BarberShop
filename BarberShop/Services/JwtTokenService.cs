@@ -1,9 +1,11 @@
 ﻿using BarberShop.Database.Entities.Identity;
 using BarberShop.Services.Interfaces;
+using BarberShop.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace BarberShop.Services
@@ -12,6 +14,32 @@ namespace BarberShop.Services
         UserManager<User> userManager,
         IConfiguration configuration
         ) : IJwtTokenService {
+
+        public async Task<JwtTokenResponse> RefreshToken(RefreshTokenVm vm) {
+            var principal = GetTokenPrincipal(vm.Token);
+
+            var response = new JwtTokenResponse();
+            if (principal?.Identity?.Name is null) 
+                return response;
+
+            var identityUser = await userManager.FindByNameAsync(principal.Identity.Name);
+
+            if (identityUser is null || identityUser.RefreshToken != vm.RefreshToken ||
+                identityUser.RefreshTokenExpiry > DateTime.UtcNow)
+                    return response;
+
+            response.IsLogedIn = true;
+            response.Token = await CreateTokenAsync(identityUser);
+            response.RefreshToken = CreateRefreshToken();
+
+            identityUser.RefreshToken = response.RefreshToken;
+            identityUser.RefreshTokenExpiry = DateTime.Now.AddDays(12);
+
+            await userManager.UpdateAsync(identityUser);
+
+            return response;
+        }
+
         public async Task<string> CreateTokenAsync(User user) {
             var key = Encoding.UTF8.GetBytes(
                     configuration["Authentication:Jwt:SecretKey"]
@@ -35,8 +63,34 @@ namespace BarberShop.Services
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
+        private string CreateRefreshToken() {
+            var randomNumber = new byte[64];
+
+            using (var numberGenerator = RandomNumberGenerator.Create()) {
+                numberGenerator.GetBytes(randomNumber);
+            }
+
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        private ClaimsPrincipal? GetTokenPrincipal(string token) {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                    configuration["Authentication:Jwt:SecretKey"]
+                        ?? throw new NullReferenceException("Authentication:Jwt:SecretKey")));
+
+            var validation = new TokenValidationParameters {
+                IssuerSigningKey = securityKey,
+                ValidateLifetime = false,
+                ValidateActor = false,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+            };
+
+            return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
+        }
+
         private async Task<List<Claim>> GetClaimsAsync(User user) {
-            string userEmail = user.Email
+            string userEmail = user.Email 
                     ?? throw new NullReferenceException($"User.Email");
 
             var userRoles = await userManager.GetRolesAsync(user);
