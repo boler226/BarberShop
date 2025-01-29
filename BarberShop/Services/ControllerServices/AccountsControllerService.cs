@@ -13,6 +13,7 @@ namespace BarberShop.Services.ControllerServices
     public class AccountsControllerService(
         DataContext context,
         UserManager<User> userManager,
+        IJwtTokenService jwtTokenService,
         IMapper mapper,
         IImageService imageService
         ) : IAccountsControllerService
@@ -20,6 +21,8 @@ namespace BarberShop.Services.ControllerServices
         public async Task<User> SignUpAsync(RegisterVm vm) {
             User user = mapper.Map<RegisterVm, User>(vm);
             user.Image = await imageService.SaveImageAsync(vm.Image);
+            user.RefreshToken = jwtTokenService.CreateRefreshToken();
+            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(12);
 
             try {
                 await CreateUserAsync(user, vm.Password);

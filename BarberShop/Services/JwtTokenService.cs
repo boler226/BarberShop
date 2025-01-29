@@ -19,10 +19,11 @@ namespace BarberShop.Services
             var principal = GetTokenPrincipal(vm.Token);
 
             var response = new JwtTokenResponse();
-            if (principal?.Identity?.Name is null) 
+            var userId = principal?.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            if (string.IsNullOrEmpty(userId))
                 return response;
 
-            var identityUser = await userManager.FindByNameAsync(principal.Identity.Name);
+            var identityUser = await userManager.FindByIdAsync(userId);
 
             if (identityUser is null || identityUser.RefreshToken != vm.RefreshToken ||
                 identityUser.RefreshTokenExpiry > DateTime.UtcNow)
@@ -33,7 +34,7 @@ namespace BarberShop.Services
             response.RefreshToken = CreateRefreshToken();
 
             identityUser.RefreshToken = response.RefreshToken;
-            identityUser.RefreshTokenExpiry = DateTime.Now.AddDays(12);
+            identityUser.RefreshTokenExpiry = DateTime.UtcNow.AddDays(12);
 
             await userManager.UpdateAsync(identityUser);
 
@@ -46,24 +47,19 @@ namespace BarberShop.Services
                         ?? throw new NullReferenceException("Authentication:Jwt:SecretKey")
             );
 
-            int tokenLifeTimeInDays = Convert.ToInt32(
-                    configuration["Authentication:Jwt:TokenLifetimeInDays"]
-                        ?? throw new NullReferenceException("Authentication:Jwt:TokenLifetimeInDays")
-            );
-
             var signinKey = new SymmetricSecurityKey(key);
 
             var signinCredential = new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256);
 
             var jwt = new JwtSecurityToken(
                 signingCredentials: signinCredential,
-                expires: DateTime.Now.AddDays(tokenLifeTimeInDays),
+                expires: DateTime.Now.AddHours(1),
                 claims: await GetClaimsAsync(user));
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
-        private string CreateRefreshToken() {
+        public string CreateRefreshToken() {
             var randomNumber = new byte[64];
 
             using (var numberGenerator = RandomNumberGenerator.Create()) {
@@ -74,9 +70,10 @@ namespace BarberShop.Services
         }
 
         private ClaimsPrincipal? GetTokenPrincipal(string token) {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                    configuration["Authentication:Jwt:SecretKey"]
-                        ?? throw new NullReferenceException("Authentication:Jwt:SecretKey")));
+            var secretKey = configuration["Authentication:Jwt:SecretKey"]
+            ?? throw new NullReferenceException("Authentication:Jwt:SecretKey");
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
             var validation = new TokenValidationParameters {
                 IssuerSigningKey = securityKey,

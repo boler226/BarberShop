@@ -7,5 +7,6 @@ namespace BarberShop.Services.Interfaces
     public interface IJwtTokenService {
         Task<JwtTokenResponse> RefreshToken(RefreshTokenVm vm);
         Task<string> CreateTokenAsync(User user);
+        public string CreateRefreshToken();
     }
 }

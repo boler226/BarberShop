@@ -21,14 +21,25 @@ namespace BarberShop.Controllers
         ) : ControllerBase {
 
         [HttpPost]
-        public async Task<IActionResult> SignIn([FromForm] LoginVm vm) {
+        
+
+        [HttpPost]
+        public async Task<IActionResult> LoginIn([FromForm] LoginVm vm) {
             User? user = await userManager.FindByEmailAsync(vm.Email);
 
             if (user is null || !await userManager.CheckPasswordAsync(user, vm.Password))
                 return Unauthorized("Wrong authentication data");
 
+            user.RefreshToken = jwtTokenService.CreateRefreshToken();
+            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(12);
+
+
+            await userManager.UpdateAsync(user);
+
             return Ok(new JwtTokenResponse {
-                Token = await jwtTokenService.CreateTokenAsync(user)
+                IsLogedIn = true,
+                Token = await jwtTokenService.CreateTokenAsync(user),
+                RefreshToken = user.RefreshToken ?? throw new Exception("Refresh token null exeption")
             });
         }
 
@@ -43,7 +54,8 @@ namespace BarberShop.Controllers
                 var user = await service.SignUpAsync(vm);
 
                 return Ok(new JwtTokenResponse {
-                    Token = await jwtTokenService.CreateTokenAsync(user)
+                    Token = await jwtTokenService.CreateTokenAsync(user),
+                    RefreshToken = user.RefreshToken ?? throw new Exception("Refresh token null exeption")
                 });
             }
             catch (IdentityException e) {
@@ -52,10 +64,10 @@ namespace BarberShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RefreshToken(RefreshTokenVm vm) {
+        public async Task<IActionResult> RefreshToken([FromForm] RefreshTokenVm vm) {
             var loginResult = await jwtTokenService.RefreshToken(vm);
             if (!loginResult.IsLogedIn)
-                return Unauthorized("Refresh token problem");
+                return Unauthorized("Refresh token wasn't changed");
 
             return Ok(vm);
         }
