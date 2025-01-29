@@ -20,8 +20,29 @@ namespace BarberShop.Controllers
         IAccountsControllerService service
         ) : ControllerBase {
 
-        [HttpPost]
-        
+        [HttpGet]
+        public async Task<IActionResult> Me(string token) {
+            var identityUser = await jwtTokenService.GetUserByTokenAsync(token);
+
+            if (identityUser is null ) 
+                return NotFound();
+
+            return Ok(identityUser);
+        }
+ 
+        [HttpGet]
+        [Authorize]
+        public  IActionResult AuthorizedTest() {
+            var authHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+            string tokenString = authHeader.Replace("Beraer ", "");
+
+            var token = new JwtSecurityToken(tokenString);
+            var response = $"Authenticated!{Environment.NewLine}";
+
+            response += $"{Environment.NewLine}Exp Time: {token.ValidTo.ToLongTimeString()}, Time: {DateTime.UtcNow.ToLongTimeString()}";
+
+            return Ok(response);
+        }
 
         [HttpPost]
         public async Task<IActionResult> LoginIn([FromForm] LoginVm vm) {
@@ -72,18 +93,5 @@ namespace BarberShop.Controllers
             return Ok(vm);
         }
 
-        [HttpGet]
-        [Authorize]
-        public IActionResult AuthorizedTest() {
-            var authHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-            string tokenString = authHeader.Replace("Beraer ", "");
-
-            var token = new JwtSecurityToken(tokenString);
-            var response = $"Authenticated!{Environment.NewLine}";
-
-            response += $"{Environment.NewLine}Exp Time: {token.ValidTo.ToLongTimeString()}, Time: {DateTime.UtcNow.ToLongTimeString()}";
-
-            return Ok(response);
-        }
     }
 }

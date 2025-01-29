@@ -1,6 +1,7 @@
 ﻿using BarberShop.Database.Entities.Identity;
 using BarberShop.Services.Interfaces;
 using BarberShop.ViewModels.Account;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -84,6 +85,18 @@ namespace BarberShop.Services
             };
 
             return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
+        }
+
+        public async Task<User?> GetUserByTokenAsync(string token) {
+            var principal = GetTokenPrincipal(token);
+
+            var userId = principal?.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return null;
+
+            var identityUser = await userManager.FindByIdAsync(userId);
+
+            return identityUser;
         }
 
         private async Task<List<Claim>> GetClaimsAsync(User user) {
