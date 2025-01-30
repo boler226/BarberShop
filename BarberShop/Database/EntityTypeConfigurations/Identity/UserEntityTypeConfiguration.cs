@@ -18,6 +18,9 @@ namespace BarberShop.Database.EntityTypeConfigurations.Identity
             builder.Property(u => u.Image)
                     .IsRequired()
                     .HasMaxLength(200);
+
+            builder.Property(u => u.RefreshTokenExpiry)
+                    .IsRequired();
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using BarberShop.Database.Entities.Identity;
 using BarberShop.Services.Interfaces;
+using BarberShop.ViewModels.Account;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace BarberShop.Services
@@ -12,15 +15,37 @@ namespace BarberShop.Services
         UserManager<User> userManager,
         IConfiguration configuration
         ) : IJwtTokenService {
+
+        public async Task<JwtTokenResponse> RefreshToken(RefreshTokenVm vm) {
+            var principal = GetTokenPrincipal(vm.Token);
+
+            var response = new JwtTokenResponse();
+            var userId = principal?.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return response;
+
+            var identityUser = await userManager.FindByIdAsync(userId);
+
+            if (identityUser is null || identityUser.RefreshToken != vm.RefreshToken ||
+                identityUser.RefreshTokenExpiry > DateTime.UtcNow)
+                    return response;
+
+            response.IsLogedIn = true;
+            response.Token = await CreateTokenAsync(identityUser);
+            response.RefreshToken = CreateRefreshToken();
+
+            identityUser.RefreshToken = response.RefreshToken;
+            identityUser.RefreshTokenExpiry = DateTime.UtcNow.AddDays(12);
+
+            await userManager.UpdateAsync(identityUser);
+
+            return response;
+        }
+
         public async Task<string> CreateTokenAsync(User user) {
             var key = Encoding.UTF8.GetBytes(
                     configuration["Authentication:Jwt:SecretKey"]
                         ?? throw new NullReferenceException("Authentication:Jwt:SecretKey")
-            );
-
-            int tokenLifeTimeInDays = Convert.ToInt32(
-                    configuration["Authentication:Jwt:TokenLifetimeInDays"]
-                        ?? throw new NullReferenceException("Authentication:Jwt:TokenLifetimeInDays")
             );
 
             var signinKey = new SymmetricSecurityKey(key);
@@ -29,14 +54,53 @@ namespace BarberShop.Services
 
             var jwt = new JwtSecurityToken(
                 signingCredentials: signinCredential,
-                expires: DateTime.Now.AddDays(tokenLifeTimeInDays),
+                expires: DateTime.Now.AddHours(1),
                 claims: await GetClaimsAsync(user));
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
+        public string CreateRefreshToken() {
+            var randomNumber = new byte[64];
+
+            using (var numberGenerator = RandomNumberGenerator.Create()) {
+                numberGenerator.GetBytes(randomNumber);
+            }
+
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        private ClaimsPrincipal? GetTokenPrincipal(string token) {
+            var secretKey = configuration["Authentication:Jwt:SecretKey"]
+            ?? throw new NullReferenceException("Authentication:Jwt:SecretKey");
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+
+            var validation = new TokenValidationParameters {
+                IssuerSigningKey = securityKey,
+                ValidateLifetime = false,
+                ValidateActor = false,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+            };
+
+            return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
+        }
+
+        public async Task<User?> GetUserByTokenAsync(string token) {
+            var principal = GetTokenPrincipal(token);
+
+            var userId = principal?.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return null;
+
+            var identityUser = await userManager.FindByIdAsync(userId);
+
+            return identityUser;
+        }
+
         private async Task<List<Claim>> GetClaimsAsync(User user) {
-            string userEmail = user.Email
+            string userEmail = user.Email 
                     ?? throw new NullReferenceException($"User.Email");
 
             var userRoles = await userManager.GetRolesAsync(user);
